@@ -12,11 +12,13 @@ const App = () => {
   const [output, setOutput] = useState('');
 
   const handleRun = async () => {
-    const payload = { code, language: selectedLanguage };
-    console.log(payload);
-    const { data } = await axios.post('http://localhost:5000/run', payload);
-    // const data = await response.json();
-    setOutput(data.output || data.error);
+    try {
+      const payload = { code, language: selectedLanguage };
+      const { data } = await axios.post('http://localhost:5000/run', payload);
+      setOutput(data.output);
+    } catch (error) {
+      setOutput(error.response.data.error);
+    }
   };
 
   return (

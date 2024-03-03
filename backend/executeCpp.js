@@ -12,7 +12,7 @@ const executeCpp = async (filePath) => {
     const jobId = path.basename(filePath).split('.')[0];
     // const outPath = path.join(outputPath, `${jobId}.exe`);
     return new Promise((resolve, reject) => {
-        exec(`cd ./codes && g++ ${jobId}.cpp -o ${jobId}.exe && ${jobId}.exe`, (error, stdout, stderr) => {
+        exec(`cd ./compile_code && g++ ${jobId}.cpp -o ${jobId}.exe && ${jobId}.exe`, (error, stdout, stderr) => {
             if (error) {
                 reject({ error, stderr });
             }
