@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const { generateFile } = require('./generateFile');
+const { executeCpp } = require('./executeCpp')
 
 //middlewares
 app.use(express.json());
@@ -21,12 +22,11 @@ app.post('/run', async (req, res) => {
     }
     try {
         const filePath = await generateFile(language, code);
-        return res.send(filePath);
+        const output = await executeCpp(filePath);
+        return res.send({ filePath, output });
     } catch (error) {
         return res.status(500).json({ sucess: false, error: error.message });
     }
-    return res.json({ language, code })
-
 });
 
 app.listen(5000, () => {
