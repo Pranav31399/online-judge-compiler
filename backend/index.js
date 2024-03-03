@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const { generateFile } = require('./generateFile');
 
 //middlewares
 app.use(express.json());
@@ -10,9 +11,8 @@ app.get('/', (req, res) => {
 });
 
 //language, code, custom input
-app.post('/run', (req, res) => {
+app.post('/run', async (req, res) => {
     const { language = 'cpp', code } = req.body;
-    console.log(req.body);
     if (!code) {
         return res.status(400).json({
             sucess: false,
@@ -20,7 +20,8 @@ app.post('/run', (req, res) => {
         });
     }
     try {
-
+        const filePath = await generateFile(language, code);
+        return res.send(filePath);
     } catch (error) {
         return res.status(500).json({ sucess: false, error: error.message });
     }
