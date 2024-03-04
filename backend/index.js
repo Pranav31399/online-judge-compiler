@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const { generateFile } = require('./generateFile');
+const { generateInputFile } = require('./generateInputFile');
 const { executeCpp } = require('./executeCpp');
 const cors = require('cors');
 
@@ -15,7 +16,7 @@ app.get('/', (req, res) => {
 
 //language, code, custom input
 app.post('/run', async (req, res) => {
-    const { language = 'cpp', code } = req.body;
+    const { language = 'cpp', code, input } = req.body;
     if (!code) {
         return res.status(400).json({
             sucess: false,
@@ -24,9 +25,11 @@ app.post('/run', async (req, res) => {
     }
     try {
         const filePath = await generateFile(language, code);
-        const output = await executeCpp(filePath);
-        return res.send({ filePath, output });
+        const inputFilePath = await generateInputFile(input);
+        const output = await executeCpp(filePath, inputFilePath);
+        return res.send({ filePath, inputFilePath, output });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ sucess: false, error: error.stderr });
     }
 });

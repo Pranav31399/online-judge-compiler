@@ -8,11 +8,12 @@ const { exec } = require('child_process');
 //     fs.mkdirSync(outputPath, { recursive: true });
 // }
 
-const executeCpp = async (filePath) => {
+const executeCpp = async (filePath, inputFilePath) => {
     const jobId = path.basename(filePath).split('.')[0];
+    const inputJobId = path.basename(inputFilePath).split('.')[0];
     // const outPath = path.join(outputPath, `${jobId}.exe`);
     return new Promise((resolve, reject) => {
-        exec(`cd ./compile_code && g++ ${jobId}.cpp -o ${jobId}.exe && ${jobId}.exe`, (error, stdout, stderr) => {
+        exec(`cd ./compile_code && g++ ${jobId}.cpp -o ${jobId}.exe && ${jobId}.exe < ${inputJobId}.txt`, (error, stdout, stderr) => {
             if (error) {
                 reject({ error, stderr });
             }
